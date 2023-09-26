@@ -3,9 +3,533 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PORTFOLIO</title>
+    <title>My Portfolio</title>
   </head>
   <body>
-    <h3>this is port folio</h3>
+    <style>
+      /* Font icon colors, etc., are tedious and reside in another stylesheet */
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        height: 100%;
+        max-width: 100%;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        transform-style: preserve-3d;
+        background-color: #000;
+      }
+
+      .page-wrap {
+        margin: 0;
+        padding: 0;
+        perspective: 1px;
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        font-family: "avenir next", avenir, helvetica, "helvetica neue", arial,
+          sans-serif;
+        color: black;
+        background: none;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        line-height: 1.2em;
+      }
+
+      p {
+        font-size: 1.2em;
+      }
+
+      .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .clickable {
+        transform: translateZ(0);
+      }
+
+      a {
+        color: rgb(222, 68, 21);
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: rgb(0, 116, 217);
+      }
+
+      /* Off-screen text for accessibility */
+      .screen-reader-text {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      #headshot {
+        width: 220px;
+        padding: 0.5em;
+        margin-bottom: -3em;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        box-shadow: 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.4);
+      }
+
+      .content {
+        width: 80vw;
+        max-width: 45em;
+        padding: 1.5em 2em;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.75);
+        box-shadow: 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.4);
+      }
+
+      .card {
+        position: relative;
+        padding: 25vh 15px 25vh 2px;
+        min-height: 100%;
+        max-width: 100vw;
+        transform-style: inherit;
+      }
+
+      .card:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .card,
+      .card:before {
+        background: 50% 50% / cover;
+      }
+
+      #card1 {
+        background: linear-gradient(
+            rgba(0, 116, 217, 0.75),
+            rgba(222, 68, 21, 0.85)
+          ),
+          url(//lh3.googleusercontent.com/rkgDPrYb0P2lf6RGHNIDfdy69s2yI15y-nLZFJWCQZuM=w1219-h914-no)
+            center/cover;
+        transform: translateZ(-1px) scale(2);
+        z-index: -1;
+      }
+
+      #card2 {
+        background-color: black;
+        background-image: radial-gradient(
+            white,
+            rgba(255, 255, 255, 0.2) 2px,
+            transparent 40px
+          ),
+          radial-gradient(
+            white,
+            rgba(255, 255, 255, 0.15) 1px,
+            transparent 30px
+          ),
+          radial-gradient(white, rgba(255, 255, 255, 0.1) 2px, transparent 40px),
+          radial-gradient(
+            rgba(255, 255, 255, 0.4),
+            rgba(255, 255, 255, 0.1) 2px,
+            transparent 30px
+          );
+        background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+        background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+        margin: 20em 0 35em 0;
+      }
+
+      #card3 {
+        background-color: #269;
+        background-image: linear-gradient(white 2px, transparent 2px),
+          linear-gradient(90deg, white 2px, transparent 2px),
+          linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+        background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+        background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+        transform: translateZ(-1px) scale(2);
+        z-index: -1;
+      }
+
+      #card4 {
+        background: url(//lh3.googleusercontent.com/DvtKuq7I2VfPS-bTXNM3KY5eEvsm5SbjvTszJR0lWs9u=w1377-h914-no)
+          center/cover;
+        margin-top: 35em;
+      }
+
+      /* App image styles */
+      .app-block {
+        flex-flow: row wrap;
+      }
+
+      .app {
+        width: 300px;
+        height: 225px;
+        max-width: 50vw;
+        margin: 0.5em;
+        box-shadow: 0.3em 0.3em 0.3em rgba(0, 0, 0, 0.4);
+        border: 0.25em solid white;
+        display: inline-block;
+      }
+
+      /* Title captions for FCC apps */
+      span.title {
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        cursor: pointer;
+        display: table;
+      }
+
+      span.title span {
+        width: 295px;
+        height: 218px;
+        max-width: calc(50vw - 8px);
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .app span.title:hover {
+        opacity: 1;
+      }
+
+      span.title {
+        background: rgba(0, 0, 0, 0.5);
+        font-size: 1.6em;
+        line-height: 1.2em;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+        display: table;
+        opacity: 0;
+        -webkit-transition: opacity 500ms;
+        -moz-transition: opacity 500ms;
+        -o-transition: opacity 500ms;
+        transition: opacity 500ms;
+      }
+
+      /* Signature */
+      .signature {
+        text-align: center;
+        margin-top: 3.5em;
+      }
+
+      .signature p {
+        color: #666;
+        font-size: 0.8em;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-style: italic;
+        letter-spacing: 0.2em;
+        margin: 0;
+        padding: 0;
+      }
+
+      .signature img {
+        width: 320px;
+        max-width: 50vw;
+      }
+    </style>
+    <div class="page-wrap">
+      <div id="card1" class="card">
+        <div class="center">
+          <img
+            id="headshot"
+            src="//lh3.googleusercontent.com/cfRnYAJYN9-WQDp0fHUmcUvytGJKGE6RFHeSJ6C6btiP=s512-no"
+          />
+        </div>
+        <div class="content">
+          <h1>Den McHenry</h1>
+          <p class="clickable">
+            I'm an illustrator, graphic designer, and front-end developer doing
+            business as
+            <a href="//rookishdesign.com" target="">Rookish Design</a> in the
+            Ballard neighborhood of Seattle, WA. I've been working through
+            <a href="//freecodecamp.com/denmch" target="_blank">FreeCodeCamp</a>
+            to help build up my JavaScript skills, and you can see some of my
+            projects below.
+          </p>
+          <h2>Social profiles</h2>
+          <div class="icon-block center clickable">
+            <a href="//twitter.com/denmch" target="_blank">
+              <i class="fa fa-twitter">
+                <span class="screen-reader-text">Twitter</span>
+              </i>
+            </a>
+            <a href="//github.com/denmch" target="_blank">
+              <i class="fa fa-github">
+                <span class="screen-reader-text">Github</span>
+              </i>
+            </a>
+            <a href="//dribbble.com/denmch" target="_blank">
+              <i class="fa fa-dribbble">
+                <span class="screen-reader-text">Dribbble</span>
+              </i>
+            </a>
+            <a href="//codepen.io/denmch" target="_blank">
+              <i class="fa fa-codepen">
+                <span class="screen-reader-text">Codepen</span>
+              </i>
+            </a>
+            <a href="//stackoverflow.com/users/2953245/denmch" target="_blank">
+              <i class="fa fa-stack-overflow">
+                <span class="screen-reader-text">Stack Overflow</span>
+              </i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div id="card2" class="card">
+        <div class="content">
+          <h1>Basic Front End Projects</h1>
+          <p>
+            These web apps use a variety of APIs along with front end frameworks
+            like Bootstrap and Foundation and liberal use of jQuery.
+          </p>
+          <div class="app-block center clickable">
+            <a href="https://codepen.io/denmch/full/KpjYVM" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/portfolio.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"
+                  ><span>Personal Portfolio Webpage</span>
+                </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/portfolio.jpg" alt="Portfolio" title="Portfolio">
+            -->
+            </a>
+            <a href="https://codepen.io/denmch/full/VLQMwy" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/random-quote-app.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Random Quote Machine</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/random-quote-app.jpg" alt="Random Quote Generator" title="Random Quote Generator">
+           -->
+            </a>
+            <a href="https://codepen.io/denmch/full/BNVraG" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/pomodoro-app.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Pomodoro Clock</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/pomodoro-app.jpg" alt="Pomodoro Timer app" title="Pomodoro Timer app">
+          -->
+            </a>
+            <a href="https://codepen.io/denmch/full/medeqw" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/calc.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Javascript Calculator</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/calc.jpg" alt="Calculator app" title="Calculator app">
+           -->
+            </a>
+          </div>
+        </div>
+      </div>
+      <div id="card3" class="card">
+        <div class="content">
+          <h1>Intermediate Projects</h1>
+          <div class="app-block center clickable">
+            <a href="https://codepen.io/denmch/full/WvMBWQ" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/weather-app.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Local Weather</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/weather-app.jpg" alt="Local Weather app" title="Local Weather app">
+          -->
+            </a>
+            <a href="https://codepen.io/denmch/full/Mwvaqa" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/twitch.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Twitch.tv JSON API</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/twitch.jpg" alt="TwitchTV user list app" title="TwitchTV user list app">
+          -->
+            </a>
+            <a href="https://codepen.io/denmch/full/domPQN" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/news.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Stories on Camper News</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/news.jpg" alt="Camper News app" title="Camper News app">
+          -->
+            </a>
+            <a href="https://codepen.io/denmch/full/yNKbby" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/wikipedia-app.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Wikipedia Viewer</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/wikipedia-app.jpg" alt="Wikipedia search and preview app" title="Wikipedia search and preview app">
+          -->
+            </a>
+            <a href="https://codepen.io/denmch/full/LVBMKo" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/tic-tac-toe.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Tic-Tac-Toe Game</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/tic-tac-toe.jpg" alt="Tic Tac Toe" title="Tic Tac Toe">
+          -->
+            </a>
+            <a href="https://codepen.io/denmch/full/epomJm" target="_blank">
+              <div
+                class="app"
+                style="
+                  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/simon-app.jpg)
+                    center;
+                  background-size: cover;
+                "
+              >
+                <span class="title"><span>Simon Game</span> </span>
+              </div>
+              <!--
+          <img class="app" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82724/simon-app.jpg" alt="Local Weather app" title="Simon app">
+          -->
+            </a>
+          </div>
+        </div>
+      </div>
+      <div id="card4" class="card">
+        <div class="content">
+          <h1>Technologies</h1>
+          <p>
+            Look at this crazy, arbitrary list of things I know with various
+            levels of proficiency and that happen to be available in the
+            Devicons icon font!
+          </p>
+          <div class="app-block center">
+            <i class="devicons devicons-html5" title="HTML5">
+              <span class="screen-reader-text">HTML5</span>
+            </i>
+            <i class="devicons devicons-markdown" title="Markdown">
+              <span class="screen-reader-text">Markdown</span>
+            </i>
+            <i class="devicons devicons-css3" title="CSS3">
+              <span class="screen-reader-text">CSS3</span>
+            </i>
+            <i class="devicons devicons-bootstrap" title="Bootstrap">
+              <span class="screen-reader-text">Bootstrap framework</span>
+            </i>
+            <i class="devicons devicons-wordpress" title="Wordpress">
+              <span class="screen-reader-text">Wordpress CMS</span>
+            </i>
+            <i class="devicons devicons-javascript" title="JavaScript">
+              <span class="screen-reader-text">JavaScript</span>
+            </i>
+            <i class="devicons devicons-jquery" title="jQuery">
+              <span class="screen-reader-text">jQuery</span>
+            </i>
+            <i class="devicons devicons-react" title="React">
+              <span class="screen-reader-text">React JS</span>
+            </i>
+            <i class="devicons devicons-angular" title="AngularJS">
+              <span class="screen-reader-text">AngularJS</span>
+            </i>
+            <i class="devicons devicons-nodejs" title="Node.js">
+              <span class="screen-reader-text">Node.js</span>
+            </i>
+            <i class="devicons devicons-npm" title="NPM">
+              <span class="screen-reader-text"
+                >NPM, the Node Packet Manager</span
+              >
+            </i>
+            <i class="devicons devicons-sublime" title="Sublime Text 3">
+              <span class="screen-reader-text">Sublime Text 3</span>
+            </i>
+            <i class="devicons devicons-cloud9" title="Cloud9">
+              <span class="screen-reader-text">Cloud9 IDE</span>
+            </i>
+            <i class="devicons devicons-terminal" title="command line">
+              <span class="screen-reader-text">the command line</span>
+            </i>
+            <i class="devicons devicons-git" title="GIT">
+              <span class="screen-reader-text">GIT version control</span>
+            </i>
+            <i class="devicons devicons-vim" title="Vim">
+              <span class="screen-reader-text">Vim text editor</span>
+            </i>
+            <i class="devicons devicons-heroku" title="Heroku">
+              <span class="screen-reader-text">Heroku app deployment</span>
+            </i>
+          </div>
+          <div class="signature clickable">
+            <p>Another bad creation by</p>
+            <a href="//denm.ch">
+              <img
+                src="http://denm.ch/wp-content/uploads/2015/03/den-mch.png"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
